@@ -489,7 +489,7 @@
                     "begin": "\\b(?i)(?<!-)(choose)(?!-)\\b",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.control.source.abl"
+                            "name": "invalid.deprecated.keyword.control.source.abl"
                         }
                     },
                     "end": "(\\.)\\s+",
@@ -2070,7 +2070,7 @@
             "patterns": [
                 {
                     "match": "\\b(?i)(?<!-)(auto-return|color|field|go-on|help|keys|no-error|pause|row)(?!-)\\b",
-                    "name": "keyword.other.source.abl"
+                    "name": "invalid.deprecated.keyword.other.source.abl"
                 }
             ]
         },
