@@ -2513,7 +2513,7 @@
         "put": {
             "patterns": [
                 {
-                    "match": "\\b(?i)(?<!-)(at|col(?:umn)?|control|cursor|format|of|row|skip|space|stream(?:-handle)?|to|unformatted)(?!-)\\b",
+                    "match": "\\b(?i)(?<!-)(at|col(?:umn)?|control|cursor|format|off|row|skip|space|stream(?:-handle)?|to|unformatted)(?!-)\\b",
                     "name": "keyword.other.source.abl"
                 },
                 {
