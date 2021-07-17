@@ -2,7 +2,7 @@
     "name": "openedgeabl",
     "displayName": "OpenEdgeABL",
     "description": "OpenEdge ABL grammar",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "unicolas",
     "author": {
         "name": "Nicolás Urquiola", 
