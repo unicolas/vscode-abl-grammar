@@ -122,7 +122,7 @@
                 },
                 {
                     "comment": "Primitive types - Backward compatibility",
-                    "name": "entity.name.type.source.abl",
+                    "name": "invalid.deprecated.entity.name.type.source.abl",
                     "match": "(?i)\\b(recid|widget-handle)(?!(\\s*\\(|-))\\b"
                 }
             ]
@@ -245,7 +245,7 @@
                 {
                     "comment": "Functions - Backward compatibility",
                     "match": "\\b(?i)(?<!-)(gateways|go-pending|is-attr-space|recid(?=\\s*\\()|widget-handle(?=\\s*\\())(?!-)\\b",
-                    "name": "entity.name.function.source.abl"
+                    "name": "invalid.deprecated.entity.name.function.source.abl"
                 }
             ]
         },
