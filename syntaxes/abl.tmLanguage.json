@@ -2175,7 +2175,7 @@
                 },
                 {
                     "match": "\\b(?i)(?<!-)(work(?:-table|file))(?!-)\\b",
-                    "name": "keyword.other.source.abl"
+                    "name": "invalid.deprecated.keyword.other.source.abl"
                 }
             ]
         },
