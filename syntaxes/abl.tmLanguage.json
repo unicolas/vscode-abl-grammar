@@ -2513,8 +2513,13 @@
         "put": {
             "patterns": [
                 {
-                    "match": "\\b(?i)(?<!-)(at|(?:no-)?attr-space|color|col(?:umn)?|control|cursor|format|of|row|skip|space|screen|stream(?:-handle)?|to|unformatted)(?!-)\\b",
+                    "match": "\\b(?i)(?<!-)(at|col(?:umn)?|control|cursor|format|of|row|skip|space|stream(?:-handle)?|to|unformatted)(?!-)\\b",
                     "name": "keyword.other.source.abl"
+                },
+                {
+                    "description": "put screen - Backward compatibility",
+                    "match": "\\b(?i)(?<!-)((?:no-)?attr-space|color|screen)(?!-)\\b",
+                    "name": "invalid.deprecated.keyword.other.source.abl"
                 }
             ]
         },
