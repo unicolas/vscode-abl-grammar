@@ -1695,7 +1695,7 @@
                     "begin": "\\b(?i)(?<!-)(scroll)(?!-)\\b",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.control.source.abl"
+                            "name": "invalid.deprecated.keyword.control.source.abl"
                         }
                     },
                     "end": "(\\.)\\s+",
@@ -2603,7 +2603,7 @@
             "patterns": [
                 {
                     "match": "\\b(?i)(?<!-)(down|from-current|up)(?!-)\\b",
-                    "name": "keyword.other.source.abl"
+                    "name": "invalid.deprecated.keyword.other.source.abl"
                 }
             ]
         },
