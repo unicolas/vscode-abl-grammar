@@ -690,7 +690,7 @@
                     "begin": "\\b(?i)(?<!-)(dde)(?!-)\\b",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.control.source.abl"
+                            "name": "invalid.deprecated.keyword.control.source.abl"
                         }
                     },
                     "end": "(\\.)\\s+",
@@ -2163,7 +2163,7 @@
             "patterns": [
                 {
                     "match": "\\b(?i)(?<!-)(advise|application|command|execute|frame|get|initiate|item|no-error|request|send|source|start|stop|target|terminate|time|topic)(?!-)\\b",
-                    "name": "keyword.other.source.abl"
+                    "name": "invalid.deprecated.keyword.other.source.abl"
                 }
             ]
         },
