@@ -1,0 +1,34 @@
+{
+    "name": "openedgeabl",
+    "displayName": "OpenEdgeABL",
+    "description": "OpenEdge ABL grammar",
+    "version": "0.0.1",
+    "publisher": "unicolas",
+    "author": {
+        "name": "Nicolás Urquiola", 
+        "email": "nicourquiola@gmail.com"
+    },
+    "repository": {
+		"type": "git",
+		"url": "https://github.com/unicolas/vscode-abl-grammar.git"
+	},
+    "engines": {
+        "vscode": "^1.24.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "abl",
+            "aliases": ["OpenEdge ABL", "abl"],
+            "extensions": [".p",".i",".cls",".fct",".def",".ds",".w"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "abl",
+            "scopeName": "source.abl",
+            "path": "./syntaxes/abl.tmLanguage.json"
+        }]
+    }
+}

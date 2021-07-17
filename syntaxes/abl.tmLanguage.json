@@ -1,0 +1,2735 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "OpenEdge ABL",
+    "patterns": [
+        {
+            "include": "#preprocessorDirectives"
+        },
+        {
+            "include": "#allComments"
+        },
+        {
+            "include": "#preprocessorReference"
+        },
+        {
+            "include": "#hBasedObject"
+        },
+        {
+            "include": "#systemHandles"
+        },
+        {
+            "include": "#members"
+        },
+        {
+            "include": "#literal"
+        },
+        {
+            "include": "#statement"
+        },
+        {
+            "include": "#primitiveTypes"
+        },
+        {
+            "include": "#sysFunction"
+        },
+        {
+            "include": "#widgetPhrase"
+        }
+    ],
+    "repository": {
+        "allComments": {
+            "patterns": [
+                {
+                    "include": "#blockComment"
+                },
+                {
+                    "include": "#lineComment"
+                }
+            ]
+        },
+        "blockComment": {
+            "patterns": [
+                {
+                    "comment": "Comment - Multiple lines",
+                    "name": "comment.block.source.abl",
+                    "begin": "/\\*",
+                    "end": "\\*/",
+                    "patterns": [
+                        {
+                            "include": "#blockComment"
+                        }
+                    ]
+                }
+            ]
+        },
+        "lineComment": {
+            "patterns": [
+                {
+                    "comment": "Comment - One line",
+                    "begin": "//",
+                    "end": "\n",
+                    "name": "comment.line.source.abl"
+                }
+            ]
+        },
+        "preprocessorDirectives": {
+            "patterns": [
+                {
+                    "comment": "Preprocessor directives - if/elseif then",
+                    "begin": "(?i)(&elseif|&if)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "end": "(?i)(&then)",
+                    "endCaptures": {
+                        "1": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "contentName": "constant.other.source.abl"
+                },
+                {
+                    "comment": "Preprocessor directives - define/message",
+                    "begin": "(?i)(&analyze-(?:resume|suspend)|&glob(?:al-define)?|&message|&scop(?:ed-define)?|&undef(?:ine)?)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "end": "(?<!~)\\n",
+                    "contentName": "constant.other.source.abl"
+                },
+                {
+                    "comment": "Preprocessor directives - other",
+                    "name": "keyword.other.source.abl",
+                    "match": "(?i)(&else|&endif)\\b"
+                }
+            ]
+        },
+        "primitiveTypes": {
+            "patterns": [
+                {
+                    "comment": "Primitive types",
+                    "name": "entity.name.type.source.abl",
+                    "match": "(?i)\\b(?<!-)(blob|char(?:acter)?|clob|date(?:time(?:-tz)?)?|dec(?:imal)?|(?:com-)?handle|int((?:eger)?|(?:64)?)|logical|longchar|memptr|raw|rowid)(?!(\\s*\\(|-))\\b"
+                },
+                {
+                    "comment": "DLL types",
+                    "name": "entity.name.type.source.abl",
+                    "match": "(?i)\\b(?<!-)(byte|double|float|(?:unsigned-)?(?:long|short))(?!(\\s*\\(|-))\\b"
+                },
+                {
+                    "comment": "Primitive types - Backward compatibility",
+                    "name": "entity.name.type.source.abl",
+                    "match": "(?i)\\b(recid|widget-handle)(?!(\\s*\\(|-))\\b"
+                }
+            ]
+        },
+        "hBasedObject": {
+            "patterns": [
+                {
+                    "comment": "Static handle-based objects - reference",
+                    "name": "keyword.other.source.abl",
+                    "match": "(?i)\\b(?<!-)(buffer|browse|dataset|data-source|frame|menu(?:-item)?|query|stream|sub-menu|temp-table|widget-pool|window)(?!-)\\b"
+                }
+            ]
+        },
+        "literal": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.source.abl",
+                    "begin": "\"",
+                    "end": "(?<!~)\"",
+                    "patterns": [
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#scapedCharacter"
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.single.source.abl",
+                    "begin": "'",
+                    "end": "(?<!~)'",
+                    "patterns": [
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#scapedCharacter"
+                        }
+                    ]
+                },
+                {
+                    "name": "constant.numeric.source.abl",
+                    "match": "(?<![\\w-])(?:-)?((?:\\d*\\.)?\\d+)\\b"
+                },
+                {
+                    "name": "constant.language.source.abl",
+                    "match": "(?i)\\b(?<!-)(false|no|true|yes)(?!-)\\b"
+                },
+                {
+                    "name": "constant.language.source.abl",
+                    "match": "\\?"
+                }
+            ]
+        },
+        "scapedCharacter": {
+            "patterns": [
+                {
+                    "comment": "Scaped character",
+                    "name": "constant.character.source.abl",
+                    "match": "~."
+                }
+            ]
+        },
+        "operator": {
+            "patterns": [
+                {
+                    "comment": "Operators",
+                    "name": "keyword.other.source.abl",
+                    "match": "(?i)\\b(?<!-)(and|begins|contains|eq|ge|gt|le|lt|matches|modulo|ne|not|(?:x)?or|when)(?!-)\\b",
+                    "FIXME": "/when/ should not be here but otherwise is not highlighted on /case-when or when/"
+                }
+            ]
+        },
+        "event": {
+            "patterns": [
+                {
+                    "comment": "Events",
+                    "name": "constant.language.source.abl",
+                    "match": "(?i)\\b(?<!-)(any-(?:key|printable)|backspace|bell|choose|clear|close|connect|default-action|delete-character|(?:de|empty-|(?:end|start)-box-)?selection|(?:cursor-)?(?:down|left|right|up)|drop-file-notify|end(?:-move|-(?:row-)?resize)?|(?:end-)?error|end(?:-)?key|entry|(?:after|before)(?:-row)?-fill|find-failed|(?:next|prev)-frame|go|help|home|iteration-changed|leave|menu-drop|mouse-(?:extend|menu|move|select)-(?:(?:dbl)?click|down|up)|(?:left|middle|right)-mouse-(?:(?:dbl)?click|down|up)|off-(?:end|home)|parent-window-close|read-response|recall|return|row-(?:create|delete|display|entry|leave|update)|(?:end|start)-search|scroll-(?:horizontal|notify|vertical)|start-(?:move|(?:row-)?resize)|synchronize|(?:back-)?tab|u(?:1(?:0)?|2|3|4|5|6|7|8|9)|value-changed|window-(?:close|maximized|minimized|resized|restored)|write)(?!-)\\b"
+                }
+            ]
+        },
+        "preprocessorReference": {
+            "patterns": [
+                {
+                    "comment": "Argument/file/name reference",
+                    "name": "keyword.operator.source.abl",
+                    "contentName": "constant.other.source.abl",
+                    "begin": "\\{",
+                    "end": "\\}"
+                }
+            ]
+        },
+        "sysFunction": {
+            "patterns": [
+                {
+                    "comment": "Functions",
+                    "match": "\\b(?i)(?<!-)(absolute|accum|add-interval|alias|ambiguous|asc|audit-enabled|available|base-(?:decode|encode)|box|buffer-(?:group-(?:id|name)|partition-id|tenant-(?:id|name))|can-(?:do|query|set)|caps|cast|chr|codepage-convert|collation|compare|connected(?=\\s*\\()|count-of|current-(?:changed|language|result-row|value)|dataservers|data-source-modified|date(?:time(?:-tz)?)?|day|db(?:codepage|name|param|-remote-host|restrictions|taskid|type|version)|(?:l|p|s)dbname|decimal|decrypt|dynamic-(?:current-value|enum|function|invoke|new|next-value|property)|else|encode|encrypt|entered|entry(?=\\s*\\()|error|etime|exp|extent|fill|first(?:-of)?|fix-codepage|frame-(?:col|down|field|index|line|row|value)|generate-(?:pbe-(?:key|salt)|random-key|uuid)|get-(?:bits|byte(?:-order|s)?|class|codepage(?:s)?|collation(?:s)?|db-client|double|effective-tenant-(?:id|name)|float|int64|(?:unsigned-)?long|pointer-value|(?:unsigned-)?short|size|string)|guid|handle|hex-(?:decode|encode)|if|index|int64|integer|interval|is-(?:codepage-fixed|column-codepage|db-multi-tenant|lead-byte)|iso-date|kblabel|key(?:code|function|label|word(?:-all)?)|last(?:-of|key)?|lc|length(?=\\s*\\()|library|line-counter|list-(?:events|(?:query|set)-attrs|widgets)|locked|log(?:ical)?|lookup|maximum(?=\\s*\\()|md5-digest|member|message-(?:diggest|lines)|minimum(?=\\s*\\()|month|mtime|new|next-value|normalize|now|num-(?:aliases|dbs|entries|results)|opsys|os-(?:dir|drives|error|getenv|rename)|overlay|page-(?:number|size)|proc-(?:handle|status)|process-architecture|program-name|progress|promsgs|propath|proversion|put-(?:long|short)|query-off-end|quoter|r-index|random|raw|record-length|rejected|replace|retry|(?:return|rgb)-value|round|row(?:id|-state)|screen-lines|search(?=\\s*\\()|seek|set-(?:db-client|effective-tenant|size)|setuserid|sha1-digest|sqrt|ssl-server-name|(?:put-|sub)?string|substitute|super|tenant-(?:id|name(?:-to-id)?)|terminal|then|time(?:zone)?|today|to-rowid|transaction|(?:left-|right-)?trim(?=\\s*\\()|truncate|type-of|unbox|userid|valid-(?:event|handle|object)|weekday|year)(?!-)\\b",
+                    "name": "entity.name.function.source.abl"
+                },
+                {
+                    "comment": "can-find",
+                    "begin": "\\b(?i)(?<!-)(can-find)(?:\\s*)(?:\\()",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "entity.name.function.source.abl"
+                        }
+                    },
+                    "end": "\\)",
+                    "patterns": [
+                        {
+                            "include": "#canFind"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Functions - Backward compatibility",
+                    "match": "\\b(?i)(?<!-)(gateways|go-pending|is-attr-space|recid(?=\\s*\\()|widget-handle(?=\\s*\\())(?!-)\\b",
+                    "name": "entity.name.function.source.abl"
+                }
+            ]
+        },
+        "systemHandles": {
+            "patterns": [
+                {
+                    "comment": "System handles",
+                    "match": "\\b(?i)(?<!-)(clipboard|(?:color|font)-table|compiler|debugger|error-status|file-info|focus|last-event|this-object|(?:source|target|this)-procedure|rcode-info|self|session|(?:active|current|default)-window)(?!-)\\b",
+                    "name": "variable.language.source.abl"
+                }
+            ]
+        },
+        "members": {
+            "patterns": [
+                {
+                    "comment": "Attribute or method reference",
+                    "match": "(?:\\[\\w*\\])?(\\:)((?:\\w|\\-)+)",
+                    "captures": {
+                        "2": {
+                            "name": "entity.name.function.source.abl"
+                        }
+                    }
+                }
+            ]
+        },
+        "objectTypes": {
+            "patterns": [
+                {
+                    "comment": "ABL/.NET Object types",
+                    "match": "\\b(?i)(?:[\\w\\-]+\\.)+(?:[\\w\\-*]+)\\b"
+                }
+            ]
+        },
+        "expression": {
+            "patterns": [
+                {
+                    "include": "#literal"
+                },
+                {
+                    "include": "#primitiveTypes"
+                },
+                {
+                    "include": "#objectTypes"
+                },
+                {
+                    "include": "#sysFunction"
+                },
+                {
+                    "include": "#hBasedObject"
+                },
+                {
+                    "include": "#systemHandles"
+                },
+                {
+                    "include": "#members"
+                },
+                {
+                    "include": "#operator"
+                },
+                {
+                    "include": "#event"
+                },
+                {
+                    "include": "#allComments"
+                },
+                {
+                    "include": "#preprocessorReference"
+                },
+                {
+                    "include": "#parameterPassing"
+                },
+                {
+                    "include": "#aggregatePhrase"
+                },
+                {
+                    "include": "#preprocessorDirectives"
+                },
+                {
+                    "include": "#widgetPhrase"
+                }
+            ]
+        },
+        "statement": {
+            "patterns": [
+                {
+                    "comment": "Accumulate",
+                    "begin": "\\b(?i)(?<!-)(accumulate)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Apply",
+                    "begin": "\\b(?i)(?<!-)(apply)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#apply"
+                        },
+                        {
+                            "include": "#expression"
+                        },
+                        {
+                            "include": "#widgetPhrase"
+                        }
+                    ]
+                },
+                {
+                    "comment": "assignment",
+                    "begin": "=",
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#noError"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Assign",
+                    "begin": "\\b(?i)(?<!-)(assign)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#assign"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Block-level/routine-level",
+                    "begin": "\\b(?i)(?<!-)((?:block|routine)-level)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#blockLevel"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Buffer-compare",
+                    "begin": "\\b(?i)(?<!-)(buffer-compare)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#bufferCompare"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Buffer-copy",
+                    "begin": "\\b(?i)(?<!-)(buffer-copy)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#bufferCopy"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Case",
+                    "begin": "\\b(?i)(?<!-)(case)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Catch",
+                    "begin": "\\b(?i)(?<!-)(catch)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#catch"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "choose",
+                    "begin": "\\b(?i)(?<!-)(choose)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#choose"
+                        },
+                        {
+                            "include": "#colorPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Class",
+                    "begin": "\\b(?i)(?<!-)(class)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#class"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Clear",
+                    "begin": "\\b(?i)(?<!-)(clear)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#clear"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Close stored-procedure",
+                    "begin": "\\b(?i)(?<!-)(close\\s+(stored-proc(?:edure)?))(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        },
+                        "2": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#closeStored"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "color",
+                    "begin": "\\b(?i)(?<!-)(color)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#color"
+                        },
+                        {
+                            "include": "#colorPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "compile",
+                    "begin": "\\b(?i)(?<!-)(compile)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#compile"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "connect/disconnect",
+                    "begin": "\\b(?i)(?<!-)(connect|disconnect)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#connect"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Constructor",
+                    "begin": "\\b(?i)(?<!-)(constructor)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#constructor"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Copy-lob",
+                    "begin": "\\b(?i)(?<!-)(copy-lob)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#copyLob"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Create",
+                    "begin": "\\b(?i)(?<!-)(create)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#create"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "DDE",
+                    "begin": "\\b(?i)(?<!-)(dde)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#dde"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "define",
+                    "begin": "\\b(?i)(?<!-)(def(?:ine)?)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "endCaptures": {
+                        "2": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#define"
+                        },
+                        {
+                            "include": "#atPhrase"
+                        },
+                        {
+                            "include": "#formatPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#viewAsPhrase"
+                        },
+                        {
+                            "include": "#browseOptionsPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "delete",
+                    "begin": "\\b(?i)(?<!-)(delete)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#delete"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "destructor",
+                    "begin": "\\b(?i)(?<!-)(destructor)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#destructor"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "disable",
+                    "begin": "\\b(?i)(?<!-)(disable)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#disable"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "display",
+                    "begin": "\\b(?i)(?<!-)(display)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#display"
+                        },
+                        {
+                            "include": "#formatPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#viewAsPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "do",
+                    "begin": "\\b(?i)(?<!-)(do)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#do"
+                        },
+                        {
+                            "include": "#preselectPhrase"
+                        },
+                        {
+                            "include": "#recordPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#onPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "DOS/UNIX",
+                    "begin": "\\b(?i)(?<!-)(dos|unix)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#dos"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Down/Up",
+                    "begin": "\\b(?i)(?<!-)(down|up)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#downUp"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "else/otherwise",
+                    "match": "\\b(?i)(?<!-)(else|otherwise)(?!-)\\b",
+                    "name": "keyword.control.source.abl"
+                },
+                {
+                    "comment": "empty temp-table",
+                    "begin": "\\b(?i)(?<!-)(empty)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#empty"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Enable",
+                    "begin": "\\b(?i)(?<!-)(enable)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#enable"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#viewAsPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "End",
+                    "begin": "\\b(?i)(?<!-)(end)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#end"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Enum",
+                    "begin": "\\b(?i)(?<!-)(enum)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#enum"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Export/import",
+                    "begin": "\\b(?i)(?<!-)(export|import)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#export"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Finally",
+                    "begin": "\\b(?i)(?<!-)(finally)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Find",
+                    "begin": "\\b(?i)(?<!-)(find)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#find"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "For",
+                    "begin": "\\b(?i)(?<!-)(for)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#for"
+                        },
+                        {
+                            "include": "#recordPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#onPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Form",
+                    "begin": "\\b(?i)(?<!-)(form)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#form"
+                        },
+                        {
+                            "include": "#atPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#formatPhrase"
+                        },
+                        {
+                            "include": "#viewAsPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Function",
+                    "begin": "\\b(?i)(?<!-)(function)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#function"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Get",
+                    "begin": "\\b(?i)(?<!-)(get)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#get"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Get/put-key-value",
+                    "begin": "\\b(?i)(?<!-)((?:get|put)-key-value)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#getKeyValue"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Hide",
+                    "begin": "\\b(?i)(?<!-)(hide)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#hide"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "If-statement/case-statement when",
+                    "begin": "\\b(?i)(?<!-)(if|when)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "\\b(?i)(?<!-)(then)(?!-)\\b",
+                    "endCaptures": {
+                        "1": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Input/input-output/output",
+                    "begin": "\\b(?i)(?<!-)(input(?:-output)?|output)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#input"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Insert",
+                    "begin": "\\b(?i)(?<!-)(insert)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#insert"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Interface",
+                    "begin": "\\b(?i)(?<!-)(interface)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#interface"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Load",
+                    "begin": "\\b(?i)(?<!-)(load)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#load"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Message",
+                    "begin": "\\b(?i)(?<!-)(message)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#message"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Method",
+                    "begin": "\\b(?i)(?<!-)(method)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#method"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Next-prompt",
+                    "begin": "\\b(?i)(?<!-)(next-prompt)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "On",
+                    "begin": "\\b(?i)(?<!-)(on)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#on"
+                        },
+                        {
+                            "include": "#widgetPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Open/close query",
+                    "begin": "\\b(?i)(?<!-)(close|open)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#openQuery"
+                        },
+                        {
+                            "include": "#recordPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "OS-*",
+                    "begin": "\\b(?i)(?<!-)(os-(?:append|command|copy|create-dir|delete|rename))(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#os"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Page",
+                    "begin": "\\b(?i)(?<!-)(page)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#page"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Pause",
+                    "begin": "\\b(?i)(?<!-)(pause)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#pause"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Procedure",
+                    "begin": "\\b(?i)(?<!-)(procedure)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#procedure"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Property Set",
+                    "begin": "\\b(?i)(?<!-)((?:(private|protected)\\s+)?set)(?=\\s*(\\.|\\())(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "prompt-for/set/update",
+                    "begin": "\\b(?i)(?<!-)(prompt-for|set|update)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#promptFor"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#formatPhrase"
+                        },
+                        {
+                            "include": "#viewAsPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "process events",
+                    "begin": "\\b(?i)(?<!-)(process)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#process"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Publish",
+                    "begin": "\\b(?i)(?<!-)(publish)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#publish"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Put",
+                    "begin": "\\b(?i)(?<!-)(put)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#put"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Raw-transfer",
+                    "begin": "\\b(?i)(?<!-)(raw)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#raw"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "readkey",
+                    "begin": "\\b(?i)(?<!-)(readkey)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#readkey"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "release",
+                    "begin": "\\b(?i)(?<!-)(release)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#release"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "repeat",
+                    "begin": "\\b(?i)(?<!-)(repeat)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.|:)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#repeat"
+                        },
+                        {
+                            "include": "#preselectPhrase"
+                        },
+                        {
+                            "include": "#recordPhrase"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#onPhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Reposition",
+                    "begin": "\\b(?i)(?<!-)(reposition)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#reposition"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Return",
+                    "begin": "\\b(?i)(?<!-)(return)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#return"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Run",
+                    "begin": "\\b(?i)(?<!-)(run)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#run"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "Save cache",
+                    "begin": "\\b(?i)(?<!-)(save)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#saveCache"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "scroll",
+                    "begin": "\\b(?i)(?<!-)(scroll)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#scroll"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "seek",
+                    "begin": "\\b(?i)(?<!-)(seek)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#seek"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "show-stats",
+                    "begin": "\\b(?i)(?<!-)(show-stats)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#showStats"
+                        },
+                        {
+                            "include": "#preprocessorReference"
+                        },
+                        {
+                            "include": "#allComments"
+                        }
+                    ]
+                },
+                {
+                    "comment": "status",
+                    "begin": "\\b(?i)(?<!-)(status)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#status"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "subscribe/unsubscribe",
+                    "begin": "\\b(?i)(?<!-)((?:un)?subscribe)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#subscribe"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "system-dialog",
+                    "begin": "\\b(?i)(?<!-)(system-dialog)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#systemDialog"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "system-help",
+                    "begin": "\\b(?i)(?<!-)(system-help)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#systemHelp"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "transaction-mode",
+                    "begin": "\\b(?i)(?<!-)(transaction-mode)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#transactionMode"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "trigger procedure",
+                    "begin": "\\b(?i)(?<!-)(trigger)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#triggerProcedure"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "underline",
+                    "begin": "\\b(?i)(?<!-)(underline)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#underline"
+                        },
+                        {
+                            "include": "#framePhrase"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "undo",
+                    "begin": "\\b(?i)(?<!-)(undo)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#undo"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "unload/use",
+                    "begin": "\\b(?i)(?<!-)(unload|use|validate)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#no-error"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "using",
+                    "begin": "\\b(?i)(?<!-)(using)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#using"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "view",
+                    "begin": "\\b(?i)(?<!-)(view)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#view"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "wait-for",
+                    "begin": "\\b(?i)(?<!-)(wait-for)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#waitFor"
+                        },
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "comment": "other - no options - expressions possible",
+                    "begin": "\\b(?i)(?<!-)(bell|call|dictionary|leave|load-picture|next|quit|stop)(?!-)\\b",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.source.abl"
+                        }
+                    },
+                    "end": "(\\.)\\s+",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                }
+            ]
+        },
+        "aggregatePhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)((?:sub-)?(?:average|count|maximum|minimum|total)|by|label)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "apply": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(to)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "assign": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(browse|except|frame|input|when|no-error)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "atPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)((?:colon|left|right)-aligned|at|column(?:-of)?|row(?:-of)?|x(?:-of)?|y(?:-of)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "blockLevel": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(on|throw|undo)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "browseOptionsPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)((?:label-)?(?:bg|d|fg|pf)color|down|drop-target|expandable|fit-last-column|font|multiple|no-(?:assign|box|empty-space|labels|row-markers|(?:auto-)?validate)|row-height-(?:chars|pixels)|(?:no-)?separators|(?:no-)?scrollbar-vertical|single|width|with)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "bufferCompare": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(except|using|to|case-sensitive|binary|save|result\\s+in|explicit|compares)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "bufferCopy": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(assign|except|no-(?:error|lobs)|to|using)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "canFind": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(and|frame|first|last|no-(?:lock|prefetch|wait)|of|share-lock|use-index|using|where)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "catch": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(as(?:\\s+class)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "choose": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(auto-return|color|field|go-on|help|keys|no-error|pause|row)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "class": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(inherits|implements|use-widget-pool|abstract|final|serializable)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "clear": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(frame|all|no-pause)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "closeStored": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(where)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "color": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(display|prompt)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "colorPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(blink-|bright-|input|messages|normal|rvv-|underline|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "compile": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(append|attr-space|debug-list|generate-md5|into|save|languages|listing|min-size|no-error|options|page-(?:size|width)|preprocess|stream-io|string-xref|text-seg-grow|use-(?:revvideo|-underline)|v6frame|value|xcode|xref(?:-xml)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "connect": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(no-error|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "constructor": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(private|protected|public|static)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "copyLob": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(append|at|convert|file|for|from|no-(?:convert|error)|object|overlay|starting|to|trim)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "create": {
+            "patterns": [
+                {
+                    "comment": "Assign attributes",
+                    "match": "[\\w\\-]+\\s*(?=\\=)",
+                    "name": "source.abl"
+                },
+                {
+                    "match": "\\b(?i)(?<!-)(alias|assign|(?:combo|dialog|toggle)-box|browse|buffer(?:-name)?|button|call|client-principal|connect|database|data(?:set|-source)|editor|fill-in|for|(?:control-)frame?|from|image|in|menu(?:-item)?|new-instance|no-error|persistent|query|radio-set|rectangle|replace|sax-(?:attributes|reader|writer)|selection-list|server(?:-socket)?|slider|soap-header(?:-entryref)?|socket|sub-menu|(?:temp-)?table|tenant|text|to|triggers|using|value|widget-pool|window|x-(?:document|noderef))(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "dde": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(advise|application|command|execute|frame|get|initiate|item|no-error|request|send|source|start|stop|target|terminate|time|topic)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "define": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(abstract|accelerator|all|append|as|ascending|auto-(?:endkey|go)|background|bind|browse|buffer|(?:flat-)?button|by-value|cache|case-sensitive|class|(bg|d|fg|pf)color|context-help-id|(?:no-)?convert-3d-colors|dataset|data-source|decimals|default|delegate|descending|disable-auto-zap|disabled|display|drop-target|edge-(?:chars|pixels)|enable|enum|event|except|extent|field|font|for|format|frame|get|global|graphic-edge|group-box|(?:table-|dataset-)handle|header|help|image(?:-down|-insensitive|-up)?|(?:use-|word-)?index|initial|input(:?-output)?|is|(?:column-)?label|like|(?:exclusive|share)-lock|menu(?:bar)?|mouse-pointer|namespace-(?:prefix|uri)|new|no-(?:fill|focus|lock|undo|wait)|not|output|override|parameter|preselect|primary|private|property|protected|public|query|read-only|rcode-information|rectangle|reference-only|(?:data|parent-id)-relation|retain-shape|(?:auto-)?return|rounded|rule|scrolling|serializable|serialize-(?:hidden|name)|set|shared|signature|skip|space|static|stream|stretch-to-fit|sub-menu(?:-help)?|(?:before-|temp-)?table|text|title|to|toggle-box|tooltip|transparent|triggers|type|unique|validate|var(?:iable)?|view-as|void|xml-node-(?:name)|widget-id)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                },
+                {
+                    "match": "\\b(?i)(?<!-)(work(?:-table|file))(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "delete": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(alias|no-error|object|procedure|validate|widget(?:-pool)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "destructor": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(public)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "disable": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(all|except|unless-hidden|when)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                },
+                {
+                    "match": "\\b(?i)(?<!-)(allow-replication|dump|for|load|of|triggers)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "display": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(browse|except|in|no-error|skip|space|stream(?:-handle)?|unless-hidden|when|window|with)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "do": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(by|for|stop-after|to|transaction|while)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "dos": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(silent|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "downUp": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(stream(?:-handle)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "empty": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(no-error|temp-table)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "enable": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(all|at|(?:bg|d|fg|pf)color|except|font|skip|space|text|to|unless-hidden|view-as|when|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "end": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(case|catch|class|compares(?:\\s+no-error)?(?:\\s+no-lobs)?|constructor|destructor|enum|finally|function|get|interface|method|procedure|set|triggers)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "enum": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(flags)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "export": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(delimiter|except|no-(?:error|lobs)|stream(?:-handle)?|unformatted)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "find": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(and|current|first|frame|last|(?:exclusive|share)-lock|next|no-(?:error|lock|prefetch|wait)|of|prev|use-index|using|where)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "for": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(break|by|collate|descending|each|first|last|stop-after|to|transaction|while)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "form": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(background|(?:bg|d|fg|pf)color|except|font|header|skip|space|text|to|view-as|widget-id)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "formatPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(as|(?:no-)?attr-space|auto-return|(?:de)?blank|colon|(?:bg|d|fg|pf)color|(?:column-)?label|disable-auto-zap|font|format|help|like|no-(?:label(?:s)?|tab-stop)|to|validate|widget-id)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "framePhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(accum|(?:no-)?attr-space|(?:cancel|default)-button|by|centered|(?:bg|d|fg|pf)?color|col(?:umn(?:s)?)?|context-help(?:-file)?|dialog-box|display|drop-target|down|export|font|frame|(?:no-)?inherit-(?:bg|fg)color|keep-tab-order|no-(?:box|help|hide|in|label(?:s)?|underline)|overlay|page-(?:bottom|top)|prompt|retain|row|(?:screen|stream)-io|scroll(?:able)?|side-labels|size(?:-chars|-pixels)?|stream(?:-handle)?|three-d|title|top-only|use-(?:revvideo|text|underline)|(?:auto-)?validate|use-dict-exps|v6frame|view-as|widget-id|width|window|with)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "function": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(forward|in|map|private|returns|super|to)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                },
+                {
+                    "match": "\\b(?i)(?<!-)(blob|char(?:acter)?|clob|date(?:time(?:-tz)?)?|dec(?:imal)?|(?:com-)?handle|int((?:eger)?|(?:64)?)|logical|longchar|memptr|raw|rowid)(?!-)\\b",
+                    "name": "entity.name.type.source.abl"
+                }
+            ]
+        },
+        "get": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(current|first|last|(?:exclusive|share)-lock|next|no-(?:lock|wait)|prev)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "getKeyValue": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(all|color|default|font|key|no-error|section|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "hide": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(all|in|message|no-pause|stream(?:-handle)?|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "input": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(append|binary|close|collate|(?:no-)?convert|from|(?:no-)?echo|keep-messages|landscape|lob-dir|(?:no-)?map|no-attr-list|num-copies|os-dir|paged|page-size|portrait|printer|source|stream(?:-handle)?|target|terminal|through|to|unbuffered|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "insert": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(except|no-error|using)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "interface": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(inherits)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "load": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(application|base-key|dir|new|no-error)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "message": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(alert-box|as|auto-return|buttons|color|error|format|in|information|like|message|ok(?:-cancel)?|question|retry-cancel|set|skip|title|update|view-as|warning|window|yes-no(?:-cancel)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "method": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(abstract|class|extent|final|override|private|protected|public|static|void)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "on": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(anywhere|do|no-error|of|or|override|persistent|revert|run)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "onPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(error|leave|next|no-apply|on\\s+(endkey|error|quit|stop)?|retry|return|throw|undo)(?!-)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.other.source.abl"
+                        },
+                        "2": {
+                            "name": "constant.language.source.abl"
+                        }
+                    }
+                }
+            ]
+        },
+        "openQuery": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(break|by|collate|descending|each|first|for|indexed-reposition|last|max-rows|preselect|query)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "os": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(no-(?:console|wait)|recursive|silent|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "page": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(stream(?:-handle)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "parameterPassing": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(append|as|bind|by-(?:value|reference)|class|dataset(?:-handle)?|for|input(?:-output)?|output|table(?:-handle)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "pause": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(before-hide|in|(?:no-)?message|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "preselectPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(break|by|collate|descending|each|first|last|preselect)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "procedure": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(cdecl|external|in|ordinal|persistent|private|stdcall|super|thread-safe)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                },
+                {
+                    "match": "\\b(?i)(?<!-)(pascal)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "promptFor": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(at|except|font|(?:b|f)gcolor|go-on|in|no-error|skip|space|stream(?:-handle)?|text|to|unless-hidden|view-as|when|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "process": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(events)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "publish": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(from)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "put": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(at|(?:no-)?attr-space|color|col(?:umn)?|control|cursor|format|of|row|skip|space|screen|stream(?:-handle)?|to|unformatted)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "raw": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(buffer|field|no-error|to)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "readkey": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(pause|stream(?:-handle)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "recordPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(and|except|fields|frame|left|(?:exclusive|no|share)-lock|no-prefetch|of|outer-join|skip-group-duplicates|table-scan|use-index|using|(?:tenant-)?where)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "release": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(external|no-error|object|procedure)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "repeat": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(by|for|stop-after|to|transaction|while)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "reposition": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(backwards|for(?:wards)?|no-error|row(?:id)?|tenant|to)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                },
+                {
+                    "match": "\\b(?i)(?<!-)(recid)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "return": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(error|no-apply)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "run": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(asynchronous|distinct|(?:event|stored)-procedure|in|on|no-error|persistent|server|set|single(?:-run|ton)|super|transaction|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "saveCache": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(cache|complete|current|no-error|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "scroll": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(down|from-current|up)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "seek": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(end|input|output|stream(?:-handle)?|to)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "showStats": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(clear)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "status": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(default|in(?:put)?|off|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "subscribe": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(all|anywhere|in|no-error|(?:run-)?procedure|to)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "systemDialog": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(ask-overwrite|color|default-extension|(?:get|initial|return-to-start)-dir|(?:create-test|get)-file|filters|font|in|initial-filter|landscape|num-copies|(?:ansi|fixed)-only|portrait|printer-setup|save-as|(?:max|min)-size|title|update|use-filename|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "systemHelp": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(command|(?:set-)?contents|context(?:-popup)?|finder|force-file|heigth|help(?:-topic)?|(?:alternate-|multiple-|partial-)?key|maximize|position|quit|text|width|window-name|x|y)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "transactionMode": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(automatic|chained)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "triggerProcedure": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(as|buffer|for|format|initial|(?:column-)?label|like|new|no-undo|of|old|procedure|value)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "underline": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(stream(?:-handle)?)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "undo": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(error|leave|next|no-apply|retry|return|throw)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "noError": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(no-error)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "using": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(assembly|from|propath)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "view": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(in|stream(?:-handle)?|window)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "viewAsPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(auto-completion|both|bottom|buffer-(?:chars|lines)|combo-box|drop-down(?:-list)?|editor|expand|fill-in|frequency|horizontal|inner-(?:chars|lines)|large(?:-to-small)?|left|list-(?:items|item-pairs)?|max-chars|multiple|native|no-(?:box|current-value|word-wrap)|none|radio-(?:buttons|set)|right|scrollbar-(?:horizontal|vertical)|selection-list|single|simple|slider|sort|text|tic-marks|toggle-box|tooltip|top|unique-match|(?:max|min)-value|vertical|view-as)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "waitFor": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(exclusive-web-user|focus|of|or|pause|set)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        },
+        "widgetPhrase": {
+            "patterns": [
+                {
+                    "match": "\\b(?i)(?<!-)(browse|field|frame|in|(?:sub-)?menu|menu-item)(?!-)\\b",
+                    "name": "keyword.other.source.abl"
+                }
+            ]
+        }
+    },
+	"scopeName": "source.abl"
+}
